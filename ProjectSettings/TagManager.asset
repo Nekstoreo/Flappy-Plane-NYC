@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Obstacle
+  - ScorePoint
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: SkyBackground
+    uniqueID: 3753806673
+    locked: 0
+  - name: DistantElements
+    uniqueID: 3824342707
+    locked: 0
+  - name: MidElements
+    uniqueID: 3223166539
+    locked: 0
+  - name: NearBackground
+    uniqueID: 282163937
+    locked: 0
+  - name: GameplayArea
+    uniqueID: 657304657
+    locked: 0
+  - name: Foreground
+    uniqueID: 3276086731
     locked: 0

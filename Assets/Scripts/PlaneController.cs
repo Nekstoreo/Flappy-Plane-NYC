@@ -13,6 +13,7 @@ public class PlaneController : MonoBehaviour
     public float rotationSpeedFactor = 5f; // Multiplicador para la velocidad de rotación
     public float maxUpAngle = 45f;       // Ángulo máximo hacia arriba
     public float maxDownAngle = -90f;    // Ángulo máximo hacia abajo
+    public float topBoundary = 5f; // Límite superior para la posición Y del avión
 
     // Start se llama una vez, justo antes de que se actualice el primer frame.
     // Es ideal para inicializar cosas.
@@ -51,5 +52,28 @@ public class PlaneController : MonoBehaviour
         // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         // O de forma directa:
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+    }
+    void LateUpdate()
+    {
+        // Obtenemos la posición actual del avión
+        Vector3 currentPosition = transform.position;
+
+        // Verificamos si la posición Y ha superado el límite superior
+        if (currentPosition.y > topBoundary)
+        {
+            // Si es así, la ajustamos para que sea exactamente el límite superior
+            transform.position = new Vector3(currentPosition.x, topBoundary, currentPosition.z);
+
+            // Opcional: Si queremos que el avión pierda su velocidad ascendente al tocar el techo
+            if (rb.velocity.y > 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+            }
+        }
+
+        // Podríamos añadir una lógica similar para un bottomBoundary (límite inferior) aquí
+        // si quisiéramos que el juego termine si cae por debajo de cierto punto,
+        // pero por ahora, la gravedad y la ausencia de suelo harán que siga cayendo.
+        // Más adelante, un "suelo" invisible podría ser un objeto con un collider que cause Game Over.
     }
 }

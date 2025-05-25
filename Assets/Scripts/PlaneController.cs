@@ -16,8 +16,6 @@ public class PlaneController : MonoBehaviour
     public float maxDownAngle = -90f;    // Ángulo máximo hacia abajo
     public float topBoundary = 5f; // Límite superior para la posición Y del avión
 
-    // --- NUEVA VARIABLE ---
-    private int score = 0; // <--- NUEVA VARIABLE
 
     // Start se llama una vez, justo antes de que se actualice el primer frame.
     // Es ideal para inicializar cosas.
@@ -85,8 +83,19 @@ public class PlaneController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("ScorePoint"))
         {
-            score++;
-            Debug.Log("Score: " + score);
+            GameManager.Instance.AddScore(1);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Verificamos si el objeto con el que hemos chocado tiene el Tag "Obstacle".
+        // Este es el Tag que le pusimos a TopTower y BottomTower.
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            GameManager.Instance.TriggerGameOver(); // <--- AÑADE ESTA LÍNEA
+            enabled = false;     // Esto está bien dejarlo para detener el control del avión inmediatamente
+
         }
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine; // Necesario para casi todo en Unity
 
+
 public class PlaneController : MonoBehaviour
 {
     // Variable pública para la fuerza del "flap" o impulso hacia arriba.
@@ -14,6 +15,9 @@ public class PlaneController : MonoBehaviour
     public float maxUpAngle = 45f;       // Ángulo máximo hacia arriba
     public float maxDownAngle = -90f;    // Ángulo máximo hacia abajo
     public float topBoundary = 5f; // Límite superior para la posición Y del avión
+
+    // --- NUEVA VARIABLE ---
+    private int score = 0; // <--- NUEVA VARIABLE
 
     // Start se llama una vez, justo antes de que se actualice el primer frame.
     // Es ideal para inicializar cosas.
@@ -75,5 +79,14 @@ public class PlaneController : MonoBehaviour
         // si quisiéramos que el juego termine si cae por debajo de cierto punto,
         // pero por ahora, la gravedad y la ausencia de suelo harán que siga cayendo.
         // Más adelante, un "suelo" invisible podría ser un objeto con un collider que cause Game Over.
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("ScorePoint"))
+        {
+            score++;
+            Debug.Log("Score: " + score);
+        }
     }
 }

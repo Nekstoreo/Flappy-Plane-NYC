@@ -1,5 +1,5 @@
 # **Flappy Plane NYC ✈️🏙️**
-![logo-android](https://github.com/user-attachments/assets/24b391ff-d220-4e92-ad39-3e6d868124c7)
+<img src="https://github.com/user-attachments/assets/24b391ff-d220-4e92-ad39-3e6d868124c7" alt="logo-android" width="180"/>
 
 ## **Descripción del Juego**
 

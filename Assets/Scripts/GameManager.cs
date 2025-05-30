@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("UI Elements")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI highScoreText_GameOver; // Texto para la máxima puntuación en Game Over
 
     [Header("UI Panels")]
     public GameObject mainMenuPanel;
@@ -37,6 +38,11 @@ public class GameManager : MonoBehaviour
     }
     public GameState currentState { get; private set; }
 
+    // Variables para la máxima puntuación
+    private int highScore = 0;
+    private const string HighScorePlayerPrefsKey = "FlappyPlaneNYCHighScore"; // Clave para PlayerPrefs
+    private bool newHighScoreAchievedThisSession = false; // Para saber si mostrar mensaje de nuevo récord
+
     void Awake()
     {
         if (Instance == null)
@@ -57,6 +63,7 @@ public class GameManager : MonoBehaviour
                 Debug.LogWarning("GameManager: AudioSource no asignado/encontrado. SFX no sonarán.");
             }
         }
+        LoadHighScore(); // Cargar la máxima puntuación al iniciar el juego
     }
 
     void Start()
@@ -72,6 +79,7 @@ public class GameManager : MonoBehaviour
         currentState = GameState.Playing;
         Time.timeScale = 1f; // Asegura que el juego corra
         score = 0;
+        newHighScoreAchievedThisSession = false; // Resetear la bandera de nuevo récord
 
         SetupForCurrentState(); // Activa/desactiva GameObjects y UI para el estado Playing
 
@@ -100,8 +108,18 @@ public class GameManager : MonoBehaviour
             currentState = GameState.GameOver;
             Time.timeScale = 0f; // Congela el juego
             Debug.Log("GameManager: GAME OVER triggered!");
+            newHighScoreAchievedThisSession = false; // Reseteamos la bandera
 
             PlaySound(collisionSoundClip);
+
+            // Verificar si se superó la máxima puntuación
+            if (score > highScore)
+            {
+                highScore = score;
+                SaveHighScore();
+                newHighScoreAchievedThisSession = true; // Marcamos que se logró un nuevo récord
+                Debug.Log("¡Nuevo High Score Obtenido!: " + highScore);
+            }
             
             // Iniciar corrutina para mostrar el GameOver panel con delay
             StartCoroutine(ShowGameOverWithDelay());
@@ -118,6 +136,21 @@ public class GameManager : MonoBehaviour
         if (finalScoreText != null)
         {
             finalScoreText.text = "Puntuación Final: " + score;
+        }
+
+        // Actualizar el texto de máxima puntuación
+        if (highScoreText_GameOver != null)
+        {
+            if (newHighScoreAchievedThisSession)
+            {
+                highScoreText_GameOver.text = "¡NUEVO RÉCORD!: " + highScore;
+                // Podrías cambiarle el color o añadir un efecto especial aquí
+            }
+            else
+            {
+                highScoreText_GameOver.text = "Máx. Puntuación: " + highScore;
+            }
+            highScoreText_GameOver.gameObject.SetActive(true); // Asegurarse de que esté visible
         }
     }
 
@@ -189,6 +222,16 @@ public class GameManager : MonoBehaviour
             }
         }
         Debug.Log(towersDestroyed + " dynamic towers destroyed. Permanent boundaries preserved.");
+
+        // Limpiar objetos ScorePoint residuales
+        GameObject[] scorePoints = GameObject.FindGameObjectsWithTag("ScorePoint");
+        int scorePointsDestroyed = 0;
+        foreach (GameObject scorePoint in scorePoints)
+        {
+            Destroy(scorePoint);
+            scorePointsDestroyed++;
+        }
+        if (scorePointsDestroyed > 0) Debug.Log(scorePointsDestroyed + " ScorePoint objects destroyed.");
 
         // Detener el TowerSpawner
         if (towerSpawner != null)
@@ -300,4 +343,21 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    void LoadHighScore()
+    {
+        highScore = PlayerPrefs.GetInt(HighScorePlayerPrefsKey, 0); // Carga el high score, o 0 si no existe
+        Debug.Log("High Score Cargado: " + highScore);
+    }
+
+    void SaveHighScore()
+    {
+        PlayerPrefs.SetInt(HighScorePlayerPrefsKey, highScore);
+        PlayerPrefs.Save(); // Guarda los cambios en el disco
+        Debug.Log("Nuevo High Score Guardado: " + highScore);
+    }
+
+    // Propiedades públicas para acceder al high score
+    public int HighScore => highScore;
+    public bool NewHighScoreAchievedThisSession => newHighScoreAchievedThisSession;
 }

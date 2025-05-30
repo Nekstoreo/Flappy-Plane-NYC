@@ -196,8 +196,8 @@ public class GameManager : MonoBehaviour
             TowerSpawnerController spawnerController = towerSpawner.GetComponent<TowerSpawnerController>();
             if (spawnerController != null)
             {
-                spawnerController.CancelInvoke("SpawnTower"); // Detener invocaciones
-                Debug.Log("Tower Spawner invokes cancelled.");
+                spawnerController.StopSpawning(); // Usar el nuevo método
+                Debug.Log("Tower Spawner stopped via StopSpawning method.");
             }
         }
 
@@ -249,9 +249,8 @@ public class GameManager : MonoBehaviour
             TowerSpawnerController spawnerController = towerSpawner.GetComponent<TowerSpawnerController>();
             if (spawnerController != null)
             {
-                spawnerController.CancelInvoke("SpawnTower"); // Por si acaso
-                spawnerController.InvokeRepeating("SpawnTower", spawnerController.initialDelay, spawnerController.spawnRate);
-                Debug.Log("Tower Spawner InvokeRepeating started.");
+                spawnerController.StartSpawning(); // Usar el nuevo método
+                Debug.Log("Tower Spawner started via StartSpawning method.");
             }
             else
             {
@@ -293,9 +292,9 @@ public class GameManager : MonoBehaviour
             if (towerSpawner != null)
             { // Asegurar que spawner esté detenido en menú
                 TowerSpawnerController spawnerController = towerSpawner.GetComponent<TowerSpawnerController>();
-                if (spawnerController != null && spawnerController.IsInvoking("SpawnTower"))
-                { // IsInvoking es útil
-                    spawnerController.CancelInvoke("SpawnTower");
+                if (spawnerController != null)
+                {
+                    spawnerController.StopSpawning(); // Usar el nuevo método
                     Debug.Log("Tower Spawner explicitly stopped for MainMenu in SetupForCurrentState.");
                 }
             }

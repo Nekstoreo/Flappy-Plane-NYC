@@ -26,11 +26,24 @@ public class TowerSpawnerController : MonoBehaviour
             return; // No continuamos si no hay prefab.
         }
 
-        // Usamos InvokeRepeating para llamar a la función SpawnTower repetidamente.
-        // "SpawnTower": El nombre de la función a llamar (debe ser un string).
-        // initialDelay: Cuánto tiempo esperar antes de la primera llamada.
-        // spawnRate: Con qué frecuencia repetir la llamada después de la primera.
+        // NO iniciamos InvokeRepeating aquí, dejamos que el GameManager controle cuándo empezar
+        // El GameManager llamará a StartSpawning() cuando sea apropiado
+        Debug.Log("TowerSpawnerController initialized. Waiting for GameManager to start spawning.");
+    }
+
+    // Método público para que el GameManager pueda iniciar el spawning
+    public void StartSpawning()
+    {
+        CancelInvoke("SpawnTower"); // Cancelar cualquier invoke anterior por seguridad
         InvokeRepeating("SpawnTower", initialDelay, spawnRate);
+        Debug.Log("Tower spawning started by GameManager.");
+    }
+
+    // Método público para detener el spawning
+    public void StopSpawning()
+    {
+        CancelInvoke("SpawnTower");
+        Debug.Log("Tower spawning stopped.");
     }
 
     // Función que se encarga de crear (instanciar) un nuevo par de torres.

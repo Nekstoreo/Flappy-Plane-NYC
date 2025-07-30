@@ -2,7 +2,8 @@
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/24b391ff-d220-4e92-ad39-3e6d868124c7" alt="logo-android" width="200"/>
-  
+  <img width="200" height="200" alt="qrcode" src="https://github.com/user-attachments/assets/40955876-52a3-486c-83d6-687ba4d449a1" />
+
   **Un emocionante juego endless flyer ambientado en Nueva York**
   
   [![Unity](https://img.shields.io/badge/Unity-2022.3.62f1-000000?style=for-the-badge&logo=unity&logoColor=white)](https://unity.com/)
